@@ -27,6 +27,7 @@ class Stock extends ChangeNotifier {
       ],
       type: ShirtType.featured,
       stock: 0,
+      promotion: 20,
     ),
     Shirt(
       name: "FreeMan t-shirt",
@@ -126,4 +127,8 @@ class Stock extends ChangeNotifier {
 
   // get promotion items
   List<Shirt> get promotionItems => _menu.where((shirt) => shirt.type == ShirtType.promotion).toList();
+}
+
+double calculateDiscountedPrice(double price, double promotion) {
+  return price * (1 - promotion / 100); // คำนวณราคาหลังจากลด
 }

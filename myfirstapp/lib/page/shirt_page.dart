@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/components/shirt_app_bar.dart';
+import 'package:myfirstapp/models/stock.dart';
 import '../models/item.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myfirstapp/components/add_cart_button.dart';
@@ -21,6 +22,13 @@ class _ShirtPageState extends State<ShirtPage> {
   ShirtSize? _selectedSize;
   ShirtColor? _selectedColor;
   int _quantity = 1;
+  bool _isFavorite = false;
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+  }
 
   void _showAddToCartDialog() {
     showDialog(
@@ -31,30 +39,33 @@ class _ShirtPageState extends State<ShirtPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
- // เลือกขนาด
-Text("เลือกขนาด"),
-SizedBox(height: 10),
-Wrap(
-  spacing: 8,
-  children: widget.shirt.availableSize.map((size) {
-    return ChoiceChip(
-      label: Text(
-        size.name,
-        style: TextStyle(
-          color: _selectedSize == size ? Colors.white : Colors.black,
-        ),
-      ),
-      selected: _selectedSize == size,
-      onSelected: (selected) {
-        setState(() {
-          _selectedSize = selected ? size : null; // เปลี่ยนขนาดที่เลือก
-        });
-      },
-      selectedColor: Colors.blue, // สีพื้นหลังเมื่อเลือก
-      backgroundColor: Colors.grey[200], // สีพื้นหลังเมื่อไม่เลือก
-    );
-  }).toList(),
-),
+              // เลือกขนาด
+              Text("เลือกขนาด"),
+              SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                children: widget.shirt.availableSize.map((size) {
+                  return ChoiceChip(
+                    label: Text(
+                      size.name,
+                      style: TextStyle(
+                        color:
+                            _selectedSize == size ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    selected: _selectedSize == size,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedSize =
+                            selected ? size : null; // เปลี่ยนขนาดที่เลือก
+                      });
+                    },
+                    selectedColor: Colors.blue, // สีพื้นหลังเมื่อเลือก
+                    backgroundColor:
+                        Colors.grey[200], // สีพื้นหลังเมื่อไม่เลือก
+                  );
+                }).toList(),
+              ),
               Divider(),
 
               // เลือกสี
@@ -73,7 +84,7 @@ Wrap(
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: getColorFromName(color.name), // เรียกใช้ฟังก์ชันที่นี่
+                        color: getColorFromName(color.name), // เรียกใช้ฟังก์ชัน
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _selectedColor == color
@@ -132,10 +143,10 @@ Wrap(
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    Shirt selectedShirt = widget.shirt;  // ใช้ shirt ที่ถูกส่งผ่านมาใน widget.shirt
+    Shirt selectedShirt =
+        widget.shirt; // ใช้ shirt ที่ถูกส่งผ่านมาใน widget.shirt
 
     return Scaffold(
       body: Column(
@@ -206,9 +217,11 @@ Wrap(
                             width: double.infinity,
                             height: 300.0,
                             child: Image.asset(
-                              selectedShirt.imagePath[0],  // แสดงภาพจาก index แรกเมื่อมีแค่รูปเดียว
+                              selectedShirt.imagePath[
+                                  0], // แสดงภาพจาก index แรกเมื่อมีแค่รูปเดียว
                               height: 300.0,
-                              fit: BoxFit.cover, // ปรับการแสดงผลรูปภาพให้อยู่ในกรอบ
+                              fit: BoxFit
+                                  .cover, // ปรับการแสดงผลรูปภาพให้อยู่ในกรอบ
                             ),
                           ),
                         ),
@@ -216,11 +229,70 @@ Wrap(
                     ],
                     // Shirt name
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        selectedShirt.name,
-                        style:
-                            TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedShirt.name,
+                              style: TextStyle(
+                                  fontSize: 26.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              _isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: _isFavorite ? Colors.red : Colors.grey,
+                              size: 35,
+                            ),
+                            onPressed: _toggleFavorite,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16, bottom: 16, left: 3, right: 10),
+                            child: Text("Favorite",
+                                style: TextStyle(
+                                    color: Colors.blue, fontSize: 20)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        children: [
+                          // แสดงราคาหลังจากคำนวณส่วนลด (ถ้ามี)
+                          if (selectedShirt.promotion != null)
+                            Row(
+                              children: [
+                                Text(
+                                  "\$${calculateDiscountedPrice(selectedShirt.price, selectedShirt.promotion!).toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  "\$${selectedShirt.price.toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                              ],
+                            )
+                          else
+                            Text(
+                              "\$${selectedShirt.price.toStringAsFixed(2)}",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
+                            ),
+                        ],
                       ),
                     ),
 
@@ -233,7 +305,7 @@ Wrap(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          //Rating Stars 
+                          // Rating Stars
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -249,7 +321,9 @@ Wrap(
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _selectedStars = i;
+                                          // If the same star is tapped again, reset the rating to 0
+                                          _selectedStars =
+                                              (_selectedStars == i) ? 0 : i;
                                         });
                                       },
                                     ),
@@ -273,7 +347,8 @@ Wrap(
                     // Description with 'More' option
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: LayoutBuilder( //เงื่อนไขจำนวนตัวอักษร
+                      child: LayoutBuilder(
+                        //เงื่อนไขจำนวนตัวอักษร
                         builder: (context, constraints) {
                           final isOverflowing =
                               selectedShirt.description.length > 150;

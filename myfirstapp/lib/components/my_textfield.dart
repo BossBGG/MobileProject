@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
+// Custom TextField widget ที่มีไอคอน suffix option สำหรับแสดงหรือซ่อนข้อความ
 class MyTextfield extends StatefulWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final bool obscureText;
-  final bool showSuffixIcon;
+  final TextEditingController controller; // Controller สำหรับการจัดการ text input
+  final String labelText; // Label สำหรับ text field
+  final bool obscureText; // กำหนดว่าข้อความควรจะซ่อนหรือแสดง (เช่น สำหรับรหัสผ่าน)
+  final bool showSuffixIcon; // กำหนดว่าจะมีไอคอน suffix สำหรับการสลับแสดง/ซ่อนข้อความหรือไม่
 
   const MyTextfield({
     super.key,
     required this.controller,
     required this.labelText,
     required this.obscureText,
-    this.showSuffixIcon = true,
+    this.showSuffixIcon = true, // ค่าเริ่มต้นเป็น true เพื่อแสดงไอคอนสลับการแสดงข้อความ
   });
 
   @override
@@ -19,16 +20,16 @@ class MyTextfield extends StatefulWidget {
 }
 
 class _MyTextfieldState extends State<MyTextfield> {
-
+  // ตัวแปรควบคุมว่า ข้อความจะถูกซ่อนหรือแสดง
   bool _obscureText = true;
 
   @override
-  // เพื่อกำหนดค่าเริ่มต้นของ _obscureText
   void initState() {
     super.initState();
-    _obscureText = widget.obscureText;
+    _obscureText = widget.obscureText; // กำหนดค่าเริ่มต้นของ _obscureText จาก input ที่ส่งมา
   }
-  //สลับค่าของ _obscureText เมื่อกดที่ไอคอน
+
+  // ฟังก์ชันสลับการแสดงข้อความเมื่อกดไอคอน
   void _toggleVisibility() {
     setState(() {
       _obscureText = !_obscureText;
@@ -41,28 +42,29 @@ class _MyTextfieldState extends State<MyTextfield> {
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: TextField(
         controller: widget.controller,
-        obscureText: _obscureText,
+        obscureText: _obscureText, // กำหนดการแสดงข้อความตาม _obscureText
         decoration: InputDecoration(
-          labelText: widget.labelText,
-          labelStyle: const TextStyle(color: Colors.black38),
-          floatingLabelStyle: const TextStyle(color: Colors.blue),
+          labelText: widget.labelText, // แสดง label ของ text field
+          labelStyle: const TextStyle(color: Colors.black38), // สไตล์ของ label
+          floatingLabelStyle: const TextStyle(color: Colors.blue), // สไตล์ของ floating label เมื่อมี focus
           focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 2.0),
+            borderSide: BorderSide(color: Colors.blue, width: 2.0), // สีของ border เมื่อ focused
           ),
           enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black38, width: 1.0),
+            borderSide: BorderSide(color: Colors.black38, width: 1.0), // สีของ border เมื่อไม่มี focus
           ),
 
-          // suffixIcon
+          // ไอคอน suffix สำหรับการสลับการแสดงข้อความ
           suffixIcon: widget.showSuffixIcon
               ? IconButton(
                   icon: Icon(
+                    // เลือกไอคอนตามค่า _obscureText
                     _obscureText ? Icons.visibility_off : Icons.visibility,
                     color: Colors.black38,
                   ),
-                  onPressed: _toggleVisibility,
+                  onPressed: _toggleVisibility, // เรียกฟังก์ชันสลับการแสดงเมื่อกดไอคอน
                 )
-              : null,
+              : null, // หาก showSuffixIcon เป็น false จะไม่มีไอคอนปรากฏ
 
           /* อธิบาย: 
           1.กำหนด IconButton เป็น suffixIcon: ตรวจสอบค่า showSuffixIcon ที่ได้รับมาจาก MyTextfield 

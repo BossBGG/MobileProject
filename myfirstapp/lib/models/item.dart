@@ -11,6 +11,7 @@ class Shirt {
   final List<ShirtColor> availableColor;
   final ShirtType type;
   final int stock;
+  final double? promotion;
 
   Shirt({
     required this.name,
@@ -22,6 +23,7 @@ class Shirt {
     required this.availableColor,
     required this.type,
     required this.stock,
+    this.promotion,
   });
 }
 // ShirtType

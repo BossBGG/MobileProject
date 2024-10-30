@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/item.dart';
+import 'package:myfirstapp/models/stock.dart';
 
 class ItemTile extends StatelessWidget {
   final Shirt shirt;
@@ -24,14 +25,43 @@ class ItemTile extends StatelessWidget {
               height: 180, // ปรับความสูงของรูปภาพให้เหมาะสมกับ Container
             ),
           ),
+          
           const SizedBox(height: 8),
-          Text(
-            "\$${shirt.price.toString()}",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
+
+          // Display discounted price if promotion exists, otherwise original price only
+          if (shirt.promotion != null) ...[
+            Row(
+              children: [
+                Text(
+                  "\$${calculateDiscountedPrice(shirt.price, shirt.promotion!).toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "\$${shirt.price.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+              ],
             ),
-          ),
+          ] else ...[
+            // If no promotion, show the original price in standard font
+            Text(
+              "\$${shirt.price.toStringAsFixed(2)}",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ],
+
+          // Shirt name
           Text(
             shirt.name,
             style: const TextStyle(
@@ -42,5 +72,5 @@ class ItemTile extends StatelessWidget {
         ],
       ),
     );
-  }  
+  }
 }

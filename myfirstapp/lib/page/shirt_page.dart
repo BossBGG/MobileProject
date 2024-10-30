@@ -5,6 +5,9 @@ import '../models/item.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myfirstapp/components/add_cart_button.dart';
 import '../models/color_utils.dart';
+import 'package:provider/provider.dart';
+import 'package:myfirstapp/models/cart.dart';
+import 'package:myfirstapp/models/cart_item.dart';
 
 class ShirtPage extends StatefulWidget {
   final Shirt shirt; //ข้อมูล Shirt ที่ถูกกดมาเป็นพารามิเตอร์
@@ -132,8 +135,34 @@ class _ShirtPageState extends State<ShirtPage> {
             ),
             TextButton(
               onPressed: () {
-                // เพิ่มสินค้าในตะกร้าด้วยขนาด สี และจำนวนที่เลือก
-                Navigator.pop(context);
+                // ตรวจสอบว่าขนาด สี และจำนวนถูกเลือกหรือไม่
+                if (_selectedSize != null && _selectedColor != null) {
+                  // สร้างรายการสินค้าใหม่
+                  final cartItem = CartItem(
+                    shirt: widget.shirt,
+                    selectedSize: _selectedSize!, // เปลี่ยนเป็น selectedSize
+                    selectedColor: _selectedColor!, // เปลี่ยนเป็น selectedColor
+                    quantity: _quantity,
+                  );
+
+                  // เพิ่มสินค้าลงในตะกร้า
+                  Provider.of<Cart>(context, listen: false).addItem(cartItem);
+
+                  // ปิด dialog
+                  Navigator.pop(context);
+
+                  // แสดงข้อความยืนยันหรือตอบสนองกับผู้ใช้ (ถ้าต้องการ)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'เพิ่ม ${widget.shirt.name} ลงในตะกร้าเรียบร้อยแล้ว!')),
+                  );
+                } else {
+                  // แจ้งเตือนผู้ใช้ว่าต้องเลือกขนาดและสี
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('กรุณาเลือกขนาดและสี')),
+                  );
+                }
               },
               child: Text("เพิ่มในตะกร้า"),
             ),

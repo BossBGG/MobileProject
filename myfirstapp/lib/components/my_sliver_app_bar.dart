@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/page/cart_page.dart';
 
 class MySliverAppBar extends StatelessWidget {
 
@@ -12,7 +13,12 @@ class MySliverAppBar extends StatelessWidget {
       // appbar เลื่อนตามจอ
       pinned: true,
       actions: [
-        IconButton(onPressed: () {}, 
+        IconButton(onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => CartPage()),
+          );
+        }, 
         icon: const Icon(Icons.shopping_bag_outlined)
         ),
       ],

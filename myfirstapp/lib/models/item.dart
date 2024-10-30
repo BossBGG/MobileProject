@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+
 // items
 class Shirt {
   final String name;
@@ -25,6 +26,13 @@ class Shirt {
     required this.stock,
     this.promotion,
   });
+
+  double getDiscountedPrice() {
+    if (promotion != null) {
+      return price * (1 - promotion! / 100);
+    }
+    return price;
+  }
 }
 // ShirtType
 enum ShirtType {
@@ -57,3 +65,4 @@ class ShirtColor {
     required this.name,
   });
 }
+

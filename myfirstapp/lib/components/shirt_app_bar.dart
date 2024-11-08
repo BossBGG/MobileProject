@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/page/cart_page.dart';
 
 class ShirtAppBar extends StatelessWidget {
   const ShirtAppBar({super.key});
@@ -22,7 +23,12 @@ class ShirtAppBar extends StatelessWidget {
           icon: const Icon(Icons.search_rounded),
         ),
         IconButton(
-          onPressed: () {}, 
+          onPressed: () {
+            Navigator.push(context , 
+            MaterialPageRoute(
+              builder:(context) => CartPage(),)
+            );
+          }, 
           icon: const Icon(Icons.shopping_bag_outlined),
         ),
       ],

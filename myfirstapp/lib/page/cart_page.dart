@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/page/select_address.dart';
 import 'package:provider/provider.dart';
 import 'package:myfirstapp/models/cart.dart';
 import 'package:myfirstapp/components/cart_tile.dart';
@@ -62,8 +63,14 @@ class CartPage extends StatelessWidget {
                       ),
               ),
               MyButton(
-                onTap: () {},
-                text: "Go to checkout",
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => SelectAddress()),
+                  );
+                },
+                text: "ชำระเงิน",
               ),
               const SizedBox(height: 25),
             ],

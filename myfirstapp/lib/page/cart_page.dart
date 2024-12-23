@@ -47,6 +47,7 @@ class CartPage extends StatelessWidget {
               ),
             ],
           ),
+          backgroundColor: Colors.grey.shade100,
           body: Column(
             children: [
               Expanded(
@@ -58,7 +59,7 @@ class CartPage extends StatelessWidget {
                         itemCount: userCart.length,
                         itemBuilder: (context, index) {
                           final cartItem = userCart[index];
-                          return MyCartTile(cartItem: cartItem);
+                          return MyCartTile(cartItem: cartItem,removeButtons: false,);
                         },
                       ),
               ),

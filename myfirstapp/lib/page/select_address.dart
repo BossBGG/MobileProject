@@ -3,6 +3,7 @@ import 'package:myfirstapp/components/my_button.dart';
 import 'package:myfirstapp/components/select_address_bar.dart';
 import 'package:myfirstapp/components/add_address_button.dart';
 import 'package:myfirstapp/page/add_address_user.dart';
+import 'package:myfirstapp/page/checklist_page.dart';
 
 class SelectAddress extends StatefulWidget {
   const SelectAddress({super.key});
@@ -101,7 +102,12 @@ class _SelectAddressState extends State<SelectAddress> {
                     padding: const EdgeInsets.only(top: 10),
                     child: MyButton(
                       onTap: () {
-                        
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => ChecklistPage(),
+                          ),
+                        );
                       },
                       text: "ชำระเงิน",
                     ),

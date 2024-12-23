@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/components/my_drawer_tile.dart';
+import 'package:myfirstapp/page/admin_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -43,7 +44,7 @@ class MyDrawer extends StatelessWidget {
 
           MyDrawerTile(
             text: "Admin", 
-            onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage())),
           ),
 
           SizedBox(height: 8),

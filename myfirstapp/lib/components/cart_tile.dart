@@ -6,8 +6,13 @@ import 'package:myfirstapp/models/cart_item.dart';
 
 class MyCartTile extends StatelessWidget {
   final CartItem cartItem;
+  final bool removeButtons; // กำหนดให้สามารถซ่อนปุ่มได้
 
-  const MyCartTile({super.key, required this.cartItem});
+  const MyCartTile({
+    super.key,
+    required this.cartItem,
+    this.removeButtons = true, // ค่าเริ่มต้นแสดงปุ่ม
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +57,9 @@ class MyCartTile extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '\$${cartItem.totalPrice.toStringAsFixed(2)}', // แสดงราคาที่คำนวณใหม่ตามจำนวน
+                                  '\$${cartItem.totalPrice.toStringAsFixed(2)}',
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                                 if (cartItem.shirt.promotion != null)
@@ -71,26 +75,27 @@ class MyCartTile extends StatelessWidget {
                                     ),
                                   ),
                               ],
-                            )
+                            ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: QuantitySelector(
-                          quantity: cartItem.quantity,
-                          onIncrement: () {
-                            cart.updateItemQuantity(
-                                cartItem, cartItem.quantity + 1);
-                          },
-                          onDecrement: () {
-                            if (cartItem.quantity > 1) {
+                      if (!removeButtons) // ซ่อน QuantitySelector เมื่อ removeButtons เป็น true
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: QuantitySelector(
+                            quantity: cartItem.quantity,
+                            onIncrement: () {
                               cart.updateItemQuantity(
-                                  cartItem, cartItem.quantity - 1);
-                            }
-                          },
+                                  cartItem, cartItem.quantity + 1);
+                            },
+                            onDecrement: () {
+                              if (cartItem.quantity > 1) {
+                                cart.updateItemQuantity(
+                                    cartItem, cartItem.quantity - 1);
+                              }
+                            },
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -120,20 +125,20 @@ class MyCartTile extends StatelessWidget {
               ],
             ),
           ),
-          // ปุ่มกากบาทเพื่อลบสินค้า
-          Positioned(
-            top: 16,
-            right: 28,
-            child: GestureDetector(
-              onTap: () {
-                cart.removeItem(cartItem);
-              },
-              child: Icon(
-                Icons.close,
-                color: Theme.of(context).colorScheme.error,
+          if (!removeButtons) // ซ่อนปุ่มกากบาทเมื่อ removeButtons เป็น true
+            Positioned(
+              top: 16,
+              right: 28,
+              child: GestureDetector(
+                onTap: () {
+                  cart.removeItem(cartItem);
+                },
+                child: Icon(
+                  Icons.close,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

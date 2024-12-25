@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-// User Count Component
-class UserCountComponent extends StatelessWidget {
+// User  Component
+class UserDetileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
